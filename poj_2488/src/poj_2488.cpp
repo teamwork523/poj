@@ -11,7 +11,6 @@
 using namespace std;
 
 int rowNum, colNum;
-int* Map;
 
 bool isOutBound (int row, int col) {
 	if (row >= 0 && row < rowNum && col >= 0 && col < colNum)
@@ -19,11 +18,34 @@ bool isOutBound (int row, int col) {
 	return true;
 }
 
-bool dsfMap (int curRow, int curCol, int depth, string& path) {
-	// make that point count
+bool dsfMap (int curRow, int curCol, int depth, int* &Map, string &path) {
+	// make the current point
+	Map[curRow*colNum+curCol] = 1;
+	depth++;
+
+	// loop through all eight possible neighbours
+	int newRow, newCol;
+	newRow = curRow-2;
+	newCol = curCol-1;
+	if (isOutBound(newRow, newCol) && Map[newRow*colNum+newCol] == 0) {
+
+	}
+	newRow = curRow-1;
+	newCol = curCol-2;
+	if (isOutBound(newRow, newCol) && Map[newRow*colNum+newCol] == 0) {
+
+	}
+	newRow = curRow-2;
+	newCol = curCol+1;
+	if (isOutBound(newRow, newCol) && Map[newRow*colNum+newCol] == 0) {
+
+	}
+	newRow = curRow-1;
+	newCol = curCol+2;
+	if (isOutBound(newRow, newCol) && Map[newRow*colNum+newCol] == 0) {
+
+	}
 	if (Map[curRow*colNum+curCol] == 0) {
-		path.push_back('A'+curRow);
-		path.push_back('0'+curCol);
 		Map[curRow*colNum+curCol] = 1;
 		return true;
 	}
@@ -31,6 +53,12 @@ bool dsfMap (int curRow, int curCol, int depth, string& path) {
 	if (depth >= curRow*curCol) {
 		return true;
 	}
+
+	// add current point to path
+	path.push_back('A'+curRow);
+	path.push_back('0'+curCol);
+
+	return false;
 }
 
 int main() {
@@ -42,7 +70,7 @@ int main() {
 		cin >> rowNum >> colNum;
 		cout << "Scenario #" << curCase << ":" << endl;
 		// allocate a map
-		Map = new int[rowNum*colNum];
+		int *map = new int[rowNum*colNum];
 
 		// iterate through a quarter of the map
 		int halfRow = ceil(rowNum/2.0);
@@ -50,14 +78,12 @@ int main() {
 		for (int j = 0; j < halfRow; j++) {
 			for (int i = 0; i < halfCol; i++) {
 				string path = "";
-				// mark the first visited
-				Map[j*colNum+i] = 1;
-				dsfMap(j, i, 0, path);
+				dsfMap(j, i, 0, map, path);
 			}
 		}
 
 		// deallocate map
-		delete[] Map;
+		delete[] map;
 		curCase++;
 		cout << endl;
 	}
